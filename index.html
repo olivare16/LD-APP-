@@ -1,292 +1,380 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
   <title>Liguita de Dominó</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#0e1a2b;
-      --muted:#64748b;
-      --brand:#ffb34a;
-      --brand-dark:#f29416;
-      --ring:#f6b766;
-      --ok:#16a34a;
-      --danger:#ef4444;
-      --shadow:0 10px 25px rgba(0,0,0,.08);
-      --radius:16px;
+      --bg: #eef2f6;
+      --card: #ffffff;
+      --text: #0b1220;
+      --muted: #5f6b7a;
+      --radius: 18px;
+      --gap: 14px;
+
+      --brand-1: #f59e26;
+      --brand-2: #f49503;
+      --brand-3: #ffbd4b;
+      --shadow: 0 10px 30px rgba(17, 29, 56, .15);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    /* ===== Base ===== */
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-      background:var(--bg);
+      background: radial-gradient(1200px 600px at 50% -100px, #fff 0%, #f7f9fc 50%, #eef2f6 100%);
       color:var(--text);
-      -webkit-tap-highlight-color: transparent;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-bottom: env(safe-area-inset-bottom, 0);
     }
-    .wrap{ max-width:720px; margin:0 auto; padding:16px 14px 28px; }
+    img{ max-width:100%; display:block; }
+    h1,h2,h3,p{ margin:0; }
 
-    /* Header */
-    .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin:10px 0 14px; }
-    .brand{ display:flex; align-items:center; gap:12px; }
-    .brand .logo{
-      width:44px; height:44px; display:block; border-radius:12px; box-shadow: var(--shadow);
-      object-fit: contain; background:#fff; /* por si el SVG tiene fondo transparente */
+    .container{
+      max-width: 960px;
+      margin-inline: auto;
+      padding: 18px 14px 38px;
     }
-    .title{ font-size: clamp(22px, 5vw, 34px); font-weight:800; line-height:1.1; }
 
+    /* ===== Header ===== */
+    .header{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      align-items:center;
+      gap: var(--gap);
+      margin-bottom: 18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .brand img{
+      width:52px; height:52px; border-radius:12px;
+      box-shadow: var(--shadow);
+    }
+    .brand h1{
+      font-weight: 800;
+      font-size: clamp(20px, 4.5vw, 32px);
+      line-height:1.1;
+      letter-spacing:.2px;
+    }
+    .cta{
+      justify-self:end;
+    }
     .btn{
-      appearance:none; border:0; outline:0;
-      background:linear-gradient(180deg, var(--brand) 0%, var(--brand-dark) 100%);
-      color:#fff; font-weight:800; padding:12px 18px; border-radius:14px;
-      box-shadow:0 6px 16px rgba(242,149,3,.35); cursor:pointer; transition:.15s transform ease;
-      touch-action: manipulation; font-size:16px;
+      appearance: none;
+      border:0;
+      cursor:pointer;
+      padding: 16px 26px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 18px;
+      color:#1a202c;
+      background: linear-gradient(180deg, var(--brand-3), var(--brand-2));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.6),
+        0 10px 20px rgba(244,149,3,.25);
+      transition: transform .05s ease;
     }
-    .btn:active{ transform: translateY(1px) scale(.99); }
+    .btn:active{ transform: translateY(1px) scale(.998); }
 
-    /* Cards */
-    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    /* ===== Responsive grids ===== */
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr;   /* móvil: 1 col */
+      gap: var(--gap);
+    }
+    @media (min-width:520px){
+      .header{ grid-template-columns: 1fr auto; }
+      .two-col{ grid-template-columns: 1fr 1fr; } /* >=520px: 2 cols */
+    }
+    @media (max-width:520px){
+      .cta{ justify-self: stretch; } /* botón ancho completo en móvil */
+      .btn{ width:100%; }
+    }
+
+    /* ===== Cards / scores ===== */
     .card{
-      background:var(--card); border-radius:var(--radius);
-      padding:14px 14px; box-shadow: var(--shadow);
-      border:1px solid rgba(244,149,3,.18); min-width:0;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      width:100%;
     }
-    .card h3{ margin:2px 0 6px; font-size: clamp(16px, 3.8vw, 20px); font-weight:800; letter-spacing:.2px; }
-    .score{ font-size: clamp(36px, 11vw, 56px); line-height:1; font-weight:900; margin:8px 0 10px; text-align:center; }
+    .score-card h3{
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .score{
+      font-size: clamp(44px, 12vw, 84px);
+      font-weight: 800;
+      line-height: 1;
+      color: #0b1220;
+      letter-spacing: 1px;
+    }
 
-    /* Inputs */
-    .input{ display:flex; align-items:center; gap:10px; margin-top:8px; }
-    input[type="number"]{
-      flex:1; background:#fff; border:2px solid var(--ring); border-radius:14px;
-      padding:12px 14px; font-size:18px; font-weight:700; color:var(--text); outline:none;
-      transition:border-color .15s ease, box-shadow .15s ease;
+    /* ===== Input panel ===== */
+    .panel{
+      margin-top: 14px;
+      padding: 18px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    input[type="number"]::placeholder{ color:#bac3cf; font-weight:600; }
-    input[type="number"]:focus{ border-color:var(--brand-dark); box-shadow:0 0 0 3px rgba(244,149,3,.18); }
-    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
+    .inputs input{
+      width:100%;
+      min-width:0;
+      padding: 16px 18px;
+      border: 2px solid #f3b560;
+      outline: none;
+      border-radius: 14px;
+      font-size: 18px;
+      background: #fff;
+      color: var(--text);
+    }
+    .inputs input::placeholder{ color:#b6bfcc; }
+
+    /* Quitar flechas de number */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button{
+      -webkit-appearance: none; margin:0;
+    }
     input[type="number"]{ -moz-appearance: textfield; }
 
-    .sumar{
-      margin:14px 0 12px; width:100%; padding:14px 18px; border-radius:16px;
-      background:linear-gradient(180deg, var(--brand) 0%, var(--brand-dark) 100%);
-      border:0; color:#fff; font-weight:900; font-size:18px; cursor:pointer;
-      box-shadow:0 8px 18px rgba(242,149,3,.35); touch-action: manipulation;
+    .primary{
+      margin-top: 14px;
+      width: 100%;
+      display:block;
+      text-align:center;
     }
 
-    /* Historial */
-    .history{ background:var(--card); border-radius:var(--radius); padding:10px 10px; box-shadow: var(--shadow); border:1px solid rgba(244,149,3,.18); margin-top:12px; }
-    .history h4{ margin:6px 8px 10px; font-size:18px }
-    #list{ max-height: 240px; overflow:auto; }
-    .row{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:12px; background:#fff; border:1px solid rgba(244,149,3,.25); margin:8px 0;
+    /* ===== Historial ===== */
+    .history{
+      margin-top: 14px;
+      padding: 18px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .row b{ font-size:15px } .row small{ color:var(--muted) }
-
-    /* Overlay ganador */
-    .overlay{ position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; padding:20px; }
-    .overlay.show{ display:flex; }
-    .modal{
-      width:min(520px, 96vw); background:#fff; border-radius:18px; padding:18px 16px 14px; box-shadow:var(--shadow);
-      text-align:center; border:1px solid rgba(244,149,3,.25); animation: pop .18s ease-out;
+    .history h3{ font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      max-height: 240px; overflow:auto; padding-right:4px;
     }
-    @keyframes pop{ from{ transform:scale(.98); opacity:.8 } to{ transform:scale(1); opacity:1 } }
-    .modal h2{ margin:6px 0 8px; font-size: clamp(22px, 6.4vw, 30px); font-weight:900; }
-    .modal p{ margin:0 0 12px; color:var(--muted); }
-    .modal .actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .modal .actions button{ padding:12px 16px; border-radius:14px; border:0; font-weight:800; cursor:pointer; font-size:16px; }
-    .reset{ background:#fff; border:2px solid var(--ring); color:#111; }
+    .item{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 14px;
+      border:1px solid #f0f0f0; border-radius:12px; background:#fff;
+    }
+    .item b{ font-weight:800; }
+    .badge{
+      padding:6px 10px; border-radius:999px;
+      background:linear-gradient(180deg, var(--brand-3), var(--brand-2));
+      font-weight:800; font-size:14px; color:#1a202c;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+      white-space:nowrap;
+    }
 
-    footer{ color:#8b97a7; text-align:center; font-size:13px; margin-top:14px }
+    /* ===== Mensaje/alerta pequeña ===== */
+    .msg{
+      margin-top: 10px;
+      color: #b43429;
+      background: #fde7e7;
+      border: 1px solid #f9c5c0;
+      padding: 10px 12px;
+      border-radius: 10px;
+      display:none;
+      font-size: 14px;
+      font-weight:600;
+    }
+    .msg.show{ display:block; }
 
-    @media (max-width:380px){ .btn{ padding:10px 14px } }
+    /* ===== Footer pequeño ===== */
+    .foot{
+      margin: 22px auto 0; text-align:center; color:#99a3b2;
+      font-size:14px;
+    }
 
-    /* Intro / Splash (usa TU logo desde logo.svg) */
-    .intro{
-      position:fixed; inset:0; z-index:20000;
-      background:linear-gradient(180deg,#ffffff 0%, #ffe7c2 100%);
+    /* ===== Splash (intro 2s) ===== */
+    #splash{
+      position:fixed; inset:0; background:#fff;
       display:flex; align-items:center; justify-content:center;
+      z-index: 9999;
+      transition: opacity .4s ease, visibility .4s ease;
     }
-    .intro-card{ text-align:center; animation: pop .20s ease-out; }
-    .intro-card img{
-      width:96px; height:96px; display:block; border-radius:20px;
-      box-shadow:var(--shadow); object-fit:contain; background:#fff;
-      margin: 0 auto;
+    #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+    .splash-card{
+      width:120px; height:120px; border-radius:26px;
+      display:grid; place-items:center;
+      background: #fff;
+      box-shadow: 0 25px 70px rgba(0,0,0,.12), inset 0 1px 0 #fff;
     }
-    .intro-card h1{ margin:14px 0 6px; font-size:28px; font-weight:900; color:#0e1a2b; }
-    .intro-card p{ margin:0; color:#8b97a7; font-weight:700; }
-    .intro.hide{ animation:introFade .45s ease forwards; pointer-events:none; }
-    @keyframes introFade{ to{ opacity:0; transform:scale(1.02); visibility:hidden; } }
+    .splash-card img{ width:90px; height:90px; }
   </style>
 </head>
 <body>
 
-  <!-- Intro / Splash (2s y se quita sola). Pon tu archivo logo como "logo.svg" en la misma carpeta. -->
-  <div class="intro" id="intro">
-    <div class="intro-card">
-      <img src="logo.svg" alt="LD logo" />
-      <h1>Liguita de Dominó</h1>
-      <p>—</p>
+  <!-- Splash de 2 segundos -->
+  <div id="splash" aria-hidden="true">
+    <div class="splash-card">
+      <!-- usa tu logo.svg del repo -->
+      <img src="logo.svg" alt="LD logo">
     </div>
   </div>
 
-  <div class="wrap" aria-live="polite">
-    <div class="top">
+  <main class="container">
+    <!-- Header -->
+    <header class="header">
       <div class="brand">
-        <!-- Logo del header: usa el mismo archivo -->
-        <img class="logo" src="logo.svg" alt="LD logo">
-        <div class="title">Liguita de Dominó</div>
+        <img src="logo.svg" alt="LD logo" width="52" height="52">
+        <h1>Liguita de Dominó</h1>
       </div>
-      <button id="newGame" class="btn">Nuevo Juego</button>
-    </div>
+      <div class="cta">
+        <button class="btn" id="btnNuevo">Nuevo Juego</button>
+      </div>
+    </header>
 
-    <!-- Marcadores -->
-    <div class="grid" role="region" aria-label="Marcadores">
-      <div class="card" id="teamA">
+    <!-- Scores -->
+    <section class="two-col">
+      <div class="card score-card">
         <h3>Equipo 1</h3>
-        <div class="score" id="scoreA">0</div>
+        <div class="score" id="s1">0</div>
       </div>
-      <div class="card" id="teamB">
+      <div class="card score-card">
         <h3>Equipo 2</h3>
-        <div class="score" id="scoreB">0</div>
+        <div class="score" id="s2">0</div>
       </div>
-    </div>
+    </section>
 
-    <!-- Entradas con teclado del dispositivo -->
-    <div class="card" style="margin-top:12px">
-      <div class="input">
-        <input id="pointsA" type="number" inputmode="numeric" pattern="\d*" placeholder="Puntos equipo 1" min="0" />
-        <input id="pointsB" type="number" inputmode="numeric" pattern="\d*" placeholder="Puntos equipo 2" min="0" />
+    <!-- Panel de inputs y sumar -->
+    <section class="panel">
+      <div class="two-col inputs" style="align-items:center;">
+        <input id="p1" type="number" inputmode="numeric" placeholder="Puntos equipo 1" min="0">
+        <input id="p2" type="number" inputmode="numeric" placeholder="Puntos equipo 2" min="0">
       </div>
-      <button id="add" class="sumar">Sumar mano</button>
-      <div id="msg" style="color:var(--danger); font-weight:700; padding:4px 2px; display:none;">Solo un equipo puede sumar por mano.</div>
-    </div>
+      <button class="btn primary" id="btnSumar">Sumar mano</button>
+      <div id="msg" class="msg"></div>
+    </section>
 
-    <!-- Historial (altura fija con scroll) -->
-    <div class="history" role="region" aria-label="Historial">
-      <h4>Historial</h4>
-      <div id="list"></div>
-    </div>
+    <!-- Historial -->
+    <section class="history">
+      <h3>Historial</h3>
+      <div id="hist" class="list" aria-live="polite" aria-relevant="additions"></div>
+    </section>
 
-    <footer>Liguita chilling — By Manuel Olivares</footer>
-  </div>
+    <div class="foot">Liguita chilling — By Manuel Olivares</div>
+  </main>
 
-  <!-- Overlay ganador -->
-  <div class="overlay" id="winOverlay" aria-modal="true" role="dialog">
-    <div class="modal">
-      <h2 id="winTitle">¡Equipo ganó!</h2>
-      <p>Se reiniciará al cerrar la app o puedes reiniciar ahora.</p>
-      <div class="actions">
-        <button class="reset" id="closeOverlay">Seguir viendo</button>
-        <button class="btn" id="resetNow">Reiniciar</button>
-      </div>
-    </div>
-  </div>
+  <script>
+    // ===== Util =====
+    const $ = s => document.querySelector(s);
 
-<script>
-(function(){
-  const scoreA = document.getElementById('scoreA');
-  const scoreB = document.getElementById('scoreB');
-  const inA    = document.getElementById('pointsA');
-  const inB    = document.getElementById('pointsB');
-  const list   = document.getElementById('list');
-  const msg    = document.getElementById('msg');
-  const addBtn = document.getElementById('add');
-  const newBtn = document.getElementById('newGame');
+    // Estado con persistencia
+    const state = {
+      s1: 0,
+      s2: 0,
+      hist: [] // [{team:1|2, pts:number, t:number}]
+    };
 
-  const overlay = document.getElementById('winOverlay');
-  const winTitle= document.getElementById('winTitle');
-  document.getElementById('closeOverlay').onclick = () => overlay.classList.remove('show');
-  document.getElementById('resetNow').onclick = resetAll;
+    const load = () => {
+      try{
+        const saved = JSON.parse(localStorage.getItem('ld_state'));
+        if(saved){
+          state.s1 = saved.s1|0;
+          state.s2 = saved.s2|0;
+          state.hist = Array.isArray(saved.hist) ? saved.hist : [];
+        }
+      }catch(e){}
+    };
+    const save = () => localStorage.setItem('ld_state', JSON.stringify(state));
 
-  let totalA = 0, totalB = 0, hand = 0;
-  const GOAL = 200;
+    const fmt = n => n.toLocaleString('es-DO');
 
-  // --- Intro / Splash: auto-cierre en 2s, sin tap ni sessionStorage ---
-  const intro = document.getElementById('intro');
-  if (intro){
-    setTimeout(() => {
-      intro.classList.add('hide');
-      setTimeout(() => { intro.style.display = 'none'; }, 460);
-    }, 2000);
-  }
+    const render = () => {
+      $('#s1').textContent = fmt(state.s1);
+      $('#s2').textContent = fmt(state.s2);
+      const hist = $('#hist');
+      hist.innerHTML = '';
+      state.hist.slice().reverse().forEach(h => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        const who = h.team === 1 ? 'Equipo 1' : 'Equipo 2';
+        const when = new Date(h.t).toLocaleTimeString('es-DO', {hour:'2-digit', minute:'2-digit'});
+        item.innerHTML = `
+          <div><b>${who}</b><div style="color:#8a96a8; font-size:12px">${when}</div></div>
+          <div class="badge">+${fmt(h.pts)}</div>
+        `;
+        hist.appendChild(item);
+      });
+    };
 
-  function render(){
-    scoreA.textContent = totalA;
-    scoreB.textContent = totalB;
-  }
+    const showMsg = (txt) => {
+      const m = $('#msg');
+      m.textContent = txt;
+      m.classList.add('show');
+      setTimeout(()=> m.classList.remove('show'), 2500);
+    };
 
-  function addRow(text, pts){
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.innerHTML = `<b>${text}</b><small>+${pts}</small>`;
-    list.prepend(row);
-  }
+    // Sumar mano
+    const sumar = () => {
+      const v1 = parseInt($('#p1').value,10) || 0;
+      const v2 = parseInt($('#p2').value,10) || 0;
 
-  function warn(msgText){
-    msg.textContent = msgText;
-    msg.style.display = 'block';
-    setTimeout(()=>msg.style.display='none', 1800);
-  }
+      if ((v1<=0 && v2<=0) || (v1>0 && v2>0)){
+        showMsg('Ingresa puntos para un solo equipo (y mayor que 0).');
+        return;
+      }
 
-  function checkWinner(){
-    if (totalA >= GOAL || totalB >= GOAL){
-      const winner = totalA >= GOAL ? 'Equipo 1' : 'Equipo 2';
-      winTitle.textContent = `¡${winner} ganó!`;
-      overlay.classList.add('show'); // bloquea interacción
-      return true;
-    }
-    return false;
-  }
+      if (v1>0){
+        state.s1 += v1;
+        state.hist.push({team:1, pts:v1, t:Date.now()});
+      } else if (v2>0){
+        state.s2 += v2;
+        state.hist.push({team:2, pts:v2, t:Date.now()});
+      }
+      $('#p1').value = '';
+      $('#p2').value = '';
+      save(); render();
+    };
 
-  const parse = v => {
-    const n = parseInt(v,10);
-    return Number.isFinite(n) && n>0 ? n : 0;
-  };
+    // Nuevo juego
+    const nuevo = () => {
+      if (state.s1===0 && state.s2===0 && state.hist.length===0){
+        return;
+      }
+      const ok = confirm('¿Empezar un juego nuevo? Se borrará el marcador y el historial.');
+      if(!ok) return;
+      state.s1 = 0; state.s2 = 0; state.hist = [];
+      save(); render();
+    };
 
-  function clearInputs(){ inA.value = ''; inB.value = ''; }
+    // Eventos
+    $('#btnSumar').addEventListener('click', sumar);
+    $('#btnNuevo').addEventListener('click', nuevo);
 
-  function resetAll(){
-    totalA = 0; totalB = 0; hand = 0; list.innerHTML = '';
-    overlay.classList.remove('show');
-    clearInputs(); render();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
+    // Enter desde inputs
+    $('#p1').addEventListener('keydown', e => { if(e.key==='Enter') sumar(); });
+    $('#p2').addEventListener('keydown', e => { if(e.key==='Enter') sumar(); });
 
-  addBtn.addEventListener('click', () => {
-    const a = parse(inA.value);
-    const b = parse(inB.value);
+    // Cargar estado
+    load(); render();
 
-    if (!a && !b){ warn('Ingresa puntos (> 0) para uno de los equipos.'); return; }
-    if (a && b){ warn('Solo un equipo puede sumar por mano.'); return; }
-
-    hand++;
-    if (a){
-      totalA += a;
-      addRow(`Mano #${hand} · Equipo 1`, a);
-    } else if (b){
-      totalB += b;
-      addRow(`Mano #${hand} · Equipo 2`, b);
-    }
-
-    clearInputs(); render(); checkWinner();
-  });
-
-  newBtn.addEventListener('click', resetAll);
-
-  // Evita zoom por foco en iOS si algo quedara <16px
-  [inA,inB].forEach(el => el.style.fontSize = '16px');
-
-  // Reinicia al cerrar/salir (no persistimos nada)
-  window.addEventListener('beforeunload', resetAll);
-  window.addEventListener('pagehide',   resetAll);
-
-  render();
-})();
-</script>
+    // Ocultar splash en 2s
+    window.addEventListener('load', () => {
+      setTimeout(() => { document.getElementById('splash').classList.add('hide'); }, 2000);
+    });
+  </script>
 </body>
 </html>
